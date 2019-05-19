@@ -1,0 +1,41 @@
+html, body {
+  font-size: 14px;
+  font-family: 'Cutive Mono', monospace;
+}
+
+.main {
+  width: 970px;
+  min-height: 200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 970px) {
+  .main {
+    width: 100%;
+  }
+}
+
+.header__basic_info {
+  font-family: 'Graduate', cursive;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.page {
+  margin-top: 30px;
+}
+
+.page__title {
+  text-align: center;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.page__content {
+  margin-top: 40px;
+  text-align: left;
+}
+
+.footer__container {
+  text-align: center;
+}
