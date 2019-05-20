@@ -1,3 +1,15 @@
+@font-face {
+  font-family: 'Graduate';
+  src: url(./public/fonts/Graduate-Regular.ttf);
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Cutive Mono';
+  src: url(./public/fonts/CutiveMono-Regular.ttf);
+  font-display: fallback;
+}
+
 html, body {
   font-size: 14px;
   font-family: 'Cutive Mono', monospace;
