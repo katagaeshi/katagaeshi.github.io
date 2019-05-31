@@ -34,18 +34,8 @@ html, body {
 }
 
 .page {
-  margin-top: 30px;
-}
-
-.page__title {
+  margin-top: 25px;
   text-align: center;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-}
-
-.page__content {
-  margin-top: 40px;
-  text-align: left;
 }
 
 .footer__container {
