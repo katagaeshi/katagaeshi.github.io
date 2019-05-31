@@ -3,7 +3,7 @@ const Copy = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: './src/main.js',
+  entry: './src/js/main.js',
   plugins: [
     new Copy([
       {
