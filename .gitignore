@@ -1,0 +1,19 @@
+################
+# Directories
+################
+.idea/
+.vscode/
+node_modules/
+output/
+
+################
+# File types
+################
+
+################
+# Specific files
+################
+
+################
+# Build artifacts
+################
