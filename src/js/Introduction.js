@@ -1,9 +1,6 @@
-const SIDES = {
-    TOP: 0,
-    RIGHT: 1,
-    BOTTOM: 2,
-    LEFT: 3,
-};
+import Actor from './Actor.js';
+import CanvasElement from './CanvasElement.js';
+import Animation from './Animation.js';
 
 const canvas = document.getElementById('introduction');
 const ctx = canvas.getContext('2d');
@@ -12,40 +9,48 @@ const CENTER = {
   y: canvas.height / 2,
 };
 
-const getRandomCoordinate = () => (Math.random() * 2) - 1;
-const getRandomVector = () => {
-  return {
-    x: getRandomCoordinate(),
-    y: getRandomCoordinate(),
-  };
-};
-
-const MAX_STAR_SIZE = 5;
-const sqrt2 = Math.sqrt(2);
-
-class Actor {
-  constructor() {
-    this.current = Object.assign({}, CENTER, { size: 0 });
-    this.vector = getRandomVector();
-    const speed = Math.sqrt(this.vector.x ** 2 + this.vector.y ** 2) / sqrt2;
-    this.endSize = speed * MAX_STAR_SIZE;
-    this.sizeIncreaseSpeed = this.endSize / 1000;
-  }
-
-  makeStep() {
-    this.current.x += this.vector.x;
-    this.current.y += this.vector.y;
-    this.current.size += this.sizeIncreaseSpeed;
-  }
-
-  isFinished() {
-    return this.current.size > this.endSize;
-  }
-
-};
-
 const MAX_ACTORS = 1000;
-let actors = [new Actor()];
+
+function createStarMovingFromCenter() {
+    const getRandomCoordinate = () => (Math.random() * 2) - 1;
+    const getRandomVector = () => ({
+        x: getRandomCoordinate(),
+        y: getRandomCoordinate(),
+    });
+
+    function drawElement() {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(
+            this.element.x,
+            this.element.y,
+            this.element.size,
+            0,
+            2 * Math.PI
+        );
+        ctx.fill();
+    }
+
+    const star = new Actor({
+        x: CENTER.x,
+        y: CENTER.y,
+        size: 1,
+        draw: drawElement,
+    });
+
+    const vector = getRandomVector();
+    star.addAnimation(
+        new Animation((element) => new CanvasElement({
+            x: element.x + vector.x,
+            y: element.y + vector.y,
+            size: element.size,
+        }))
+    );
+
+    return star;
+}
+
+let actors = [createStarMovingFromCenter()];
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -54,27 +59,31 @@ function draw() {
 
     for (let i = 0; i < actors.length; ++i) {
         const actor = actors[i];
-        actor.makeStep();
-
-        ctx.fillStyle = '#FFFFFF';
-        ctx.beginPath();
-        ctx.arc(
-            actor.current.x,
-            actor.current.y,
-            actor.current.size,
-            0,
-            2 * Math.PI
-        );
-        ctx.fill();
+        actor.applyAnimations();
+        actor.draw();
     }
 
-    actors = actors.filter(actor => !actor.isFinished());
+    actors = actors.filter((actor) => {
+        if (actor.element.x < 0)
+            return false;
+
+        if (actor.element.y < 0)
+            return false;
+
+        if (actor.element.x > canvas.width)
+            return false;
+
+        if (actor.element.y > canvas.height)
+            return false;
+
+        return true;
+    });
 
     if (Math.random() * 100 < 10) {
         const addActorsNum = Math.random() * 10;
         if (actors.length < MAX_ACTORS) {
             for (let i = 0; i < addActorsNum; ++i) {
-                actors.push(new Actor());
+                actors.push(createStarMovingFromCenter());
             }
         }
     }

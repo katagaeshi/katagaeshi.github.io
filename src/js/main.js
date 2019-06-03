@@ -1,4 +1,4 @@
-import createLogger from './Logger';
+import createLogger from './Logger.js';
 import draw from './Introduction.js';
 
 const log = createLogger();
