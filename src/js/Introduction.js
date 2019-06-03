@@ -4,15 +4,16 @@ import Animation from './Animation.js';
 
 const canvas = document.getElementById('introduction');
 const ctx = canvas.getContext('2d');
-const CENTER = {
+const CANVAS_CENTER = {
   x: canvas.width / 2,
   y: canvas.height / 2,
 };
 
 const MAX_ACTORS = 1000;
 
-function createStarMovingFromCenter() {
-    const getRandomCoordinate = () => (Math.random() * 2) - 1;
+const getRandomCoordinate = () => (Math.random() * 2) - 1;
+
+function createStarMovingFromCenter(startingPoint) {
     const getRandomVector = () => ({
         x: getRandomCoordinate(),
         y: getRandomCoordinate(),
@@ -32,25 +33,31 @@ function createStarMovingFromCenter() {
     }
 
     const star = new Actor({
-        x: CENTER.x,
-        y: CENTER.y,
+        x: startingPoint.x,
+        y: startingPoint.y,
         size: 1,
         draw: drawElement,
     });
 
     const vector = getRandomVector();
+
+    let boost = 1;
+
     star.addAnimation(
-        new Animation((element) => new CanvasElement({
-            x: element.x + vector.x,
-            y: element.y + vector.y,
-            size: element.size,
-        }))
+        new Animation((element) => {
+            boost *= 1.05;
+            return new CanvasElement({
+                x: element.x + vector.x * boost,
+                y: element.y + vector.y * boost,
+                size: element.size,
+            });
+        })
     );
 
     return star;
 }
 
-let actors = [createStarMovingFromCenter()];
+let actors = [];
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -79,12 +86,10 @@ function draw() {
         return true;
     });
 
-    if (Math.random() * 100 < 10) {
+    if (actors.length < MAX_ACTORS) {
         const addActorsNum = Math.random() * 10;
-        if (actors.length < MAX_ACTORS) {
-            for (let i = 0; i < addActorsNum; ++i) {
-                actors.push(createStarMovingFromCenter());
-            }
+        for (let i = 0; i < addActorsNum; ++i) {
+            actors.push(createStarMovingFromCenter(CANVAS_CENTER));
         }
     }
 
